@@ -152,23 +152,23 @@ extension ViewController {
         
         let color = colorForLockViewState(state, useHighlightedColor: true)
         let dashLengths: [CGFloat] = [5.0, 10.0, 5.0]
-        CGContextSetStrokeColorWithColor(context, color.CGColor);
-        CGContextSetLineWidth(context, 3)
-        CGContextSetLineCap(context, .Round)
-        CGContextSetLineJoin(context, .Round)
-        CGContextSetLineDash(context, 0, dashLengths, 3)
+        CGContextSetStrokeColorWithColor(context!, color.CGColor);
+        CGContextSetLineWidth(context!, 3)
+        CGContextSetLineCap(context!, .Round)
+        CGContextSetLineJoin(context!, .Round)
+        CGContextSetLineDash(context!, 0, dashLengths, 3)
         
         let fistPoint = path.first
         for point in path {
             if point == fistPoint {
-                CGContextMoveToPoint(context, point.x, point.y)
+                CGContextMoveToPoint(context!, point.x, point.y)
             }
             else {
-                CGContextAddLineToPoint(context, point.x, point.y)
+                CGContextAddLineToPoint(context!, point.x, point.y)
             }
         }
         
-        CGContextDrawPath(context, .Stroke)
+        CGContextDrawPath(context!, .Stroke)
     }
     
     private func drawLockViewDot(dot: HUIPatternLockView.Dot, context: CGContextRef?, state: LockViewPasswordState = .Normal) {
@@ -176,16 +176,16 @@ extension ViewController {
         let innerDotRadius: CGFloat = 15.0
         let color = colorForLockViewState(state, useHighlightedColor: dot.highlighted)
         
-        CGContextSetLineWidth(context, 1)
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextSetStrokeColorWithColor(context, color.CGColor)
+        CGContextSetLineWidth(context!, 1)
+        CGContextSetFillColorWithColor(context!, color.CGColor)
+        CGContextSetStrokeColorWithColor(context!, color.CGColor)
         
-        CGContextMoveToPoint(context, dotCenter.x, dotCenter.y)
-        CGContextBeginPath(context)
-        CGContextAddArc(context, dotCenter.x, dotCenter.y, innerDotRadius, 0, CGFloat(2*M_PI), 1)
-        CGContextClosePath(context)
-        CGContextFillPath(context)
-        CGContextStrokeEllipseInRect(context, dot.frame)
+        CGContextMoveToPoint(context!, dotCenter.x, dotCenter.y)
+        CGContextBeginPath(context!)
+        CGContextAddArc(context!, dotCenter.x, dotCenter.y, innerDotRadius, 0, CGFloat(2*M_PI), 1)
+        CGContextClosePath(context!)
+        CGContextFillPath(context!)
+        CGContextStrokeEllipseInRect(context!, dot.frame)
     }
 }
 
@@ -215,7 +215,7 @@ extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return image
+        return image!
     }
 }
 

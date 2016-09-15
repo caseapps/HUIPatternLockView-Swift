@@ -156,34 +156,34 @@ extension HUIPatternLockView {
         //draw line
         if !linePath.isEmpty {
             if let drawLineClosure = drawLinePathWithContext {
-                CGContextSaveGState(context)
+                CGContextSaveGState(context!)
                 drawLineClosure(path: linePath, context: context)
-                CGContextRestoreGState(context)
+                CGContextRestoreGState(context!)
             } else {
-                CGContextSetStrokeColorWithColor(context, lineColor.CGColor)
-                CGContextSetLineWidth(context, lineWidth)
-                CGContextSetLineJoin(context, .Round)
+                CGContextSetStrokeColorWithColor(context!, lineColor.CGColor)
+                CGContextSetLineWidth(context!, lineWidth)
+                CGContextSetLineJoin(context!, .Round)
                 
                 let firstPoint = linePath.first
                 for point in linePath {
                     if point == firstPoint {
-                        CGContextMoveToPoint(context, point.x, point.y)
+                        CGContextMoveToPoint(context!, point.x, point.y)
                     }
                     else {
-                        CGContextAddLineToPoint(context, point.x, point.y)
+                        CGContextAddLineToPoint(context!, point.x, point.y)
                     }
                 }
                 
-                CGContextDrawPath(context, .Stroke)
+                CGContextDrawPath(context!, .Stroke)
             }
         }
         
         //draw normal dots
         if let drawDotClosure = drawDotWithContext {
             for dot in normalDots {
-                CGContextSaveGState(context)
+                CGContextSaveGState(context!)
                 drawDotClosure(dot: dot, context: context)
-                CGContextRestoreGState(context)
+                CGContextRestoreGState(context!)
             }
         }
         else if let image = normalDotImage {
@@ -195,9 +195,9 @@ extension HUIPatternLockView {
         //draw highlighted dots
         if let drawDotClosure = drawDotWithContext {
             for dot in highlightedDots {
-                CGContextSaveGState(context)
+                CGContextSaveGState(context!)
                 drawDotClosure(dot: dot, context: context)
-                CGContextRestoreGState(context)
+                CGContextRestoreGState(context!)
             }
         }
         else if let image = highlightedDotImage {
@@ -300,7 +300,7 @@ extension HUIPatternLockView {
         }
     }
     
-    public override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    public override func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent?) {
         resetDotsState()
         setLockViewNeedUpdate(needRecalculateDotsFrame: false)
     }
