@@ -107,6 +107,7 @@
 				TargetAttributes = {
 					E18745A01BDCDB92004BF518 = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = G633QX7MU6;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -266,9 +267,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				DEVELOPMENT_TEAM = G633QX7MU6;
 				INFOPLIST_FILE = HUIPatternLockViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = mobi.morefun.HUIPatternLockViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = at.caseapps.HUIPatternLockViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 2.3;
 			};
@@ -279,9 +281,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				DEVELOPMENT_TEAM = G633QX7MU6;
 				INFOPLIST_FILE = HUIPatternLockViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = mobi.morefun.HUIPatternLockViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = at.caseapps.HUIPatternLockViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 2.3;
 			};
