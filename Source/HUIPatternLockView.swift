@@ -64,6 +64,13 @@ import Foundation
         }
     }
     
+    // MARK: Behavior Related Properties
+    @IBInspectable public var connectInBetweenDots: Bool = false {
+        didSet {
+            setLockViewNeedUpdate(needRecalculateDotsFrame: false)
+        }
+    }
+    
     //MARK: Callback Properties
     public var drawLinePathWithContext: ((path: Array<CGPoint>, context: CGContextRef?) -> Void)? = nil {
         didSet {
@@ -210,9 +217,72 @@ extension HUIPatternLockView {
 
 // MARK: - Record Line Path
 extension HUIPatternLockView {
+    private func columnAndRowForIndex(index: Int) -> (column: Int, row: Int) {
+        
+        let row = index/numberOfColumns
+        let column = index % numberOfColumns
+        
+        return (column: column, row: row)
+    }
+    
+    private func hasDotBetweenIndex(start: Int, end:Int) -> Bool {
+        
+        let startColRow = columnAndRowForIndex(start)
+        let endColRow   = columnAndRowForIndex(end)
+        
+        return (startColRow.column == endColRow.column && startColRow.row != endColRow.row && abs(startColRow.row-endColRow.row)>1) ||
+            (startColRow.row == endColRow.row && startColRow.column != endColRow.column && abs(startColRow.column-endColRow.column)>1) ||
+            (abs(startColRow.row-endColRow.row) == abs(startColRow.column-endColRow.column) && abs(startColRow.row-endColRow.row) > 1)
+    }
+    
+    private func inBetweenDotIndexesForStart(start: Int, end: Int) -> [Dot] {
+        if hasDotBetweenIndex(start, end: end) {
+            let startColRow = columnAndRowForIndex(start)
+            let endColRow   = columnAndRowForIndex(end)
+            
+            let col : Int
+            let row : Int
+            if startColRow.column<endColRow.column {
+                col = startColRow.column+1
+            } else if startColRow.column>endColRow.column {
+                col = startColRow.column-1
+            } else {
+                col = startColRow.column
+            }
+            
+            if startColRow.row<endColRow.row {
+                row = startColRow.row+1
+            } else if startColRow.row>endColRow.row {
+                row = startColRow.row-1
+            } else {
+                row = startColRow.row
+            }
+            
+            let dotIndex = row*numberOfColumns+col
+            if let dot = dotWithTag(dotIndex) {
+                let colDots = inBetweenDotIndexesForStart(start, end: dotIndex)
+                let rowDots = inBetweenDotIndexesForStart(end, end: dotIndex)
+                return [ dot ] + colDots + rowDots
+            } else {
+                return []
+            }
+        } else {
+            return []
+        }
+    }
+    
     private func normalDotContainsPoint(point: CGPoint) -> Dot? {
         for dot in normalDots {
             if CGRectContainsPoint(dot.frame, point) {
+                return dot
+            }
+        }
+        return nil
+    }
+    
+    private func dotWithTag(tag: Int) -> Dot? {
+        for dot in normalDots {
+            if tag == dot.tag {
                 return dot
             }
         }
@@ -230,6 +300,17 @@ extension HUIPatternLockView {
             }
             else {
                 //else insert a new point into the path
+                
+                if connectInBetweenDots {
+                    //check if there are any dots in between that shall be activated
+                    let inBetweenDots = inBetweenDotIndexesForStart(highlightedDots.last!.tag, end: dot.tag)
+                    for var dot in inBetweenDots {
+                        dot.highlighted = true
+                        highlightedDots.append(dot)
+                        normalDots.removeAtIndex(normalDots.indexOf(dot)!)
+                    }
+                }
+                
                 linePath.insert(dot.center, atIndex: linePathPointsCount-1)
             }
             

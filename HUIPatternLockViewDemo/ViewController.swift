@@ -40,6 +40,8 @@ extension ViewController {
         let correctImage = highlightedImage?.tintImage(correctLineColor)
         let wrongImage = highlightedImage?.tintImage(wrongLineColor)
         
+        lockView.connectInBetweenDots = true
+        
         
         lockView.didDrawPatternWithPassword = { (lockView: HUIPatternLockView, count: Int, password: String?) -> Void in
             guard count > 0 else {
