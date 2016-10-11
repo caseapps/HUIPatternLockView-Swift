@@ -29,6 +29,12 @@
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="image" keyPath="normalDotImage" value="dot_normal"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="highlightedDotImage" value="dot_highlighted"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="numberOfRows">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="numberOfColumns">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>

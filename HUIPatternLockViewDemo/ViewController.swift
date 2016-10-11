@@ -40,6 +40,8 @@ extension ViewController {
         let correctImage = highlightedImage?.tintImage(tintColor: correctLineColor)
         let wrongImage = highlightedImage?.tintImage(tintColor: wrongLineColor)
         
+        lockView.connectInBetweenDots = true
+        
         lockView.didDrawPatternPassword = { (lockView, count, password) -> Void in
             guard count > 0 else {
                 return

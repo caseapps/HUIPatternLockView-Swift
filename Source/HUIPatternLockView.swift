@@ -67,6 +67,13 @@ import Foundation
         }
     }
     
+    // MARK: Behavior Related Properties
+    @IBInspectable public var connectInBetweenDots: Bool = false {
+        didSet {
+            setLockViewNeedsUpdate(needRelayoutDots: false)
+        }
+    }
+    
     //MARK: Callback Properties
     public var drawLinePath: ((_ path: Array<CGPoint>, _ context: CGContext) -> Void)? = nil {
         didSet {
@@ -228,6 +235,69 @@ extension HUIPatternLockView {
             }
         }
         return nil
+    }
+    
+    fileprivate func dotWithTag(tag: Int) -> Dot? {
+        for dot in normalDots {
+            if tag == dot.tag {
+                return dot
+            }
+        }
+        return nil
+    }
+    
+    fileprivate func columnAndRowForIndex(index: Int) -> (column: Int, row: Int) {
+        
+        let row = index/numberOfColumns
+        let column = index % numberOfColumns
+        
+        return (column: column, row: row)
+    }
+    
+    fileprivate func hasDotBetweenIndex(start: Int, end:Int) -> Bool {
+        
+        let startColRow = columnAndRowForIndex(index: start)
+        let endColRow   = columnAndRowForIndex(index: end)
+        
+        return (startColRow.column == endColRow.column && startColRow.row != endColRow.row && abs(startColRow.row-endColRow.row)>1) ||
+            (startColRow.row == endColRow.row && startColRow.column != endColRow.column && abs(startColRow.column-endColRow.column)>1) ||
+            (abs(startColRow.row-endColRow.row) == abs(startColRow.column-endColRow.column) && abs(startColRow.row-endColRow.row) > 1)
+    }
+    
+    fileprivate func inBetweenDotIndexesForStart(start: Int, end: Int) -> [Dot] {
+        if hasDotBetweenIndex(start: start, end: end) {
+            let startColRow = columnAndRowForIndex(index: start)
+            let endColRow   = columnAndRowForIndex(index: end)
+            
+            let col : Int
+            let row : Int
+            if startColRow.column<endColRow.column {
+                col = startColRow.column+1
+            } else if startColRow.column>endColRow.column {
+                col = startColRow.column-1
+            } else {
+                col = startColRow.column
+            }
+            
+            if startColRow.row<endColRow.row {
+                row = startColRow.row+1
+            } else if startColRow.row>endColRow.row {
+                row = startColRow.row-1
+            } else {
+                row = startColRow.row
+            }
+            
+            let dotIndex = row*numberOfColumns+col
+            if let dot = dotWithTag(tag: dotIndex) {
+                let colDots = inBetweenDotIndexesForStart(start: start, end: dotIndex)
+                let rowDots = inBetweenDotIndexesForStart(start: end, end: dotIndex)
+                return [ dot ] + colDots + rowDots
+            } else {
+                return []
+            }
+        } else {
+            return []
+        }
     }
     
     fileprivate func updateLinePath(with point: CGPoint) -> Void {
