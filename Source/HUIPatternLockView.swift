@@ -237,7 +237,7 @@ extension HUIPatternLockView {
         return nil
     }
     
-    fileprivate func dotWithTag(tag: Int) -> Dot? {
+    fileprivate func dotWith(tag: Int) -> Dot? {
         for dot in normalDots {
             if tag == dot.tag {
                 return dot
@@ -246,7 +246,7 @@ extension HUIPatternLockView {
         return nil
     }
     
-    fileprivate func columnAndRowForIndex(index: Int) -> (column: Int, row: Int) {
+    fileprivate func columnAndRowFor(index: Int) -> (column: Int, row: Int) {
         
         let row = index/numberOfColumns
         let column = index % numberOfColumns
@@ -254,20 +254,20 @@ extension HUIPatternLockView {
         return (column: column, row: row)
     }
     
-    fileprivate func hasDotBetweenIndex(start: Int, end:Int) -> Bool {
+    fileprivate func hasDotBetween(startIndex: Int, endIndex:Int) -> Bool {
         
-        let startColRow = columnAndRowForIndex(index: start)
-        let endColRow   = columnAndRowForIndex(index: end)
+        let startColRow = columnAndRowFor(index: startIndex)
+        let endColRow   = columnAndRowFor(index: endIndex)
         
         return (startColRow.column == endColRow.column && startColRow.row != endColRow.row && abs(startColRow.row-endColRow.row)>1) ||
             (startColRow.row == endColRow.row && startColRow.column != endColRow.column && abs(startColRow.column-endColRow.column)>1) ||
             (abs(startColRow.row-endColRow.row) == abs(startColRow.column-endColRow.column) && abs(startColRow.row-endColRow.row) > 1)
     }
     
-    fileprivate func inBetweenDotIndexesForStart(start: Int, end: Int) -> [Dot] {
-        if hasDotBetweenIndex(start: start, end: end) {
-            let startColRow = columnAndRowForIndex(index: start)
-            let endColRow   = columnAndRowForIndex(index: end)
+    fileprivate func inBetweenDotIndexesFor(startIndex: Int, endIndex: Int) -> [Dot] {
+        if hasDotBetween(startIndex: startIndex, endIndex: endIndex) {
+            let startColRow = columnAndRowFor(index: startIndex)
+            let endColRow   = columnAndRowFor(index: endIndex)
             
             let col : Int
             let row : Int
@@ -288,9 +288,9 @@ extension HUIPatternLockView {
             }
             
             let dotIndex = row*numberOfColumns+col
-            if let dot = dotWithTag(tag: dotIndex) {
-                let colDots = inBetweenDotIndexesForStart(start: start, end: dotIndex)
-                let rowDots = inBetweenDotIndexesForStart(start: end, end: dotIndex)
+            if let dot = dotWith(tag: dotIndex) {
+                let colDots = inBetweenDotIndexesFor(startIndex: startIndex, endIndex: dotIndex)
+                let rowDots = inBetweenDotIndexesFor(startIndex: endIndex, endIndex: dotIndex)
                 return [ dot ] + colDots + rowDots
             } else {
                 return []
@@ -311,6 +311,17 @@ extension HUIPatternLockView {
             }
             else {
                 //else insert a new point into the path
+                
+                if connectInBetweenDots {
+                    //check if there are any dots in between that shall be activated
+                    let inBetweenDots = inBetweenDotIndexesFor(startIndex: highlightedDots.last!.tag, endIndex: dot.tag)
+                    for var dot in inBetweenDots {
+                        dot.highlighted = true
+                        highlightedDots.append(dot)
+                        normalDots.remove(at: normalDots.index(of:dot)!)
+                    }
+                }
+                
                 linePath.insert(dot.center, at: linePathPointsCount-1)
             }
             
