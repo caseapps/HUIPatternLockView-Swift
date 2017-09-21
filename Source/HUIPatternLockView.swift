@@ -155,6 +155,7 @@ extension HUIPatternLockView {
                 normalDots.append(dot)
             }
         }
+        setNeedsDisplay()
     }
     
     open override func draw(_ rect: CGRect) {
